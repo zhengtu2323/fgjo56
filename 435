@@ -1,20 +1,20 @@
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Python: Current File",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "justMyCode": false
-    },
-    {
-      "name": "Python: Debug Tests",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "purpose": ["debug-test"],
-      "console": "integratedTerminal",
-      "justMyCode": true
-    }
+from server.app import app
+from server.website import Website
+from server.backend import Backend_Api
+from json import load
+
+
+if __name__ == '__main__':
+
+    # Load configuration from config.json
+    config = load(open('config.json', 'r'))
+    site_config = config['site_config']
+
+    # Set up the website routes
+    site = Website(app)
+    for route in site.routes:
+        app.add_url_rule(
+            route,
+            view_func=site.routes[route]['function'],
+            methods=site.routes[route]['methods'],
+        )
